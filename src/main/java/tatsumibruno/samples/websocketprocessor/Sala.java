@@ -3,12 +3,13 @@ package tatsumibruno.samples.websocketprocessor;
 public class Sala {
 
 	private Integer id;
-	private Integer numPlayers;
+	private String usuario; 
+	private String mensagem;
 
-	public Sala(Integer id, Integer numPlayers) {
-
+	public Sala(Integer id, String usuario, String mensagem) {
+		this.mensagem = mensagem;
 		this.id = id;
-		this.numPlayers = numPlayers;
+		this.usuario = usuario;
 	}
 
 	public Sala() {
@@ -23,13 +24,23 @@ public class Sala {
 		this.id = id;
 	}
 
-	public Integer getNumPlayers() {
-		return numPlayers;
+	public String getUsuario() {
+		return usuario;
 	}
 
-	public void setNumPlayers(Integer numPlayers) {
-		this.numPlayers = numPlayers;
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
 	}
+
+	public String getMensagem() {
+		return mensagem;
+	}
+
+	public void setMensagem(String mensagem) {
+		this.mensagem = mensagem;
+	}
+
+	
 	
 	
 

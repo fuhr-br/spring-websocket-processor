@@ -17,53 +17,42 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class ProcessorService {
 
-    private SimpMessagingTemplate template;
+	private SimpMessagingTemplate template;
 
-    @Autowired
-    public ProcessorService(SimpMessagingTemplate template) {
-        this.template = template;
-    }
+	@Autowired
+	public ProcessorService(SimpMessagingTemplate template) {
+		this.template = template;
+	}
 
-    @Async
-    public void execute(Sala sala) {
-    	String URLresposta = "/statusProcessor";
-    	   	
-    	
-        try {
-        	
-        	if(validaNumPlayers(sala.getNumPlayers())) {
-       		 URLresposta = "/statusProcessor" + sala.getId().toString();
-        	} 
-        	
-            Thread.sleep(1000L);
-            
-            template.convertAndSend(URLresposta, gerarMensagem(1) 
-            		+ " Sala Número: " + sala.getId() 
-            		+"Num Player: " + sala.getNumPlayers());
-        
-        } catch (InterruptedException e) {
-            log.error("Erro durante o procesamento.", e);
-        }
-    }
+	@Async
+	public void execute(Sala sala) {
+		String URLresposta = "/statusProcessor" + sala.getId().toString();
 
-    private String gerarMensagem(int etapa) {
-        return String.format("Executada a etapa %s às %s", etapa,
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
-    }
-    
-//    private String gerarURL(Mensagem mensagem) {
+		try {
+
+			template.convertAndSend(URLresposta, gerarMensagem() 
+					+ "\nSala Número: " + sala.getId() 
+					+ " \nUsuário: " + sala.getUsuario() 
+					+ "\nMensagem: " + sala.getMensagem()
+
+			);
+
+		} catch (Exception e) {
+			log.error("Erro durante o procesamento.", e);
+		}
+	}
+
+	private String gerarMensagem() {
+		return String.format("Executada  às %s",
+				LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+	}
+
+//    private String gerarURL(Sala sala) {
 //    	mensagem.setId(1L);
 //    	 String URL = ServletUriComponentsBuilder.fromCurrentContextPath().path("/statusProcessor")
 //    			 .path(mensagem.getId().toString()).toUriString();
 //    	 return URL;
 //    	
 //    }
-    
-    private Boolean validaNumPlayers(Integer numeroPlayers) {
-    	if(numeroPlayers > 6) {
-    		return false;
-    	}
-    	return true;
-    }
-    
+
 }
