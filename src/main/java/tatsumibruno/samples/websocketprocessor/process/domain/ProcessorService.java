@@ -31,7 +31,7 @@ public class ProcessorService {
 		try {
 
 			template.convertAndSend(URLresposta, gerarMensagem() 
-					+ "\nSala Número: " + sala.getId() 
+					+ "\n: Sala Número: " + sala.getId()
 					+ " \nUsuário: " + sala.getUsuario() 
 					+ "\nMensagem: " + sala.getMensagem()
 
@@ -43,8 +43,7 @@ public class ProcessorService {
 	}
 
 	private String gerarMensagem() {
-		return String.format("Executada  às %s",
-				LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+		return LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
 	}
 
 //    private String gerarURL(Sala sala) {
