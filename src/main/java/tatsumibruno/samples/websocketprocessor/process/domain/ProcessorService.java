@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import tatsumibruno.samples.websocketprocessor.Mensagem;
+import tatsumibruno.samples.websocketprocessor.Sala;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,29 +17,42 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class ProcessorService {
 
-    private SimpMessagingTemplate template;
+	private SimpMessagingTemplate template;
 
-    @Autowired
-    public ProcessorService(SimpMessagingTemplate template) {
-        this.template = template;
-    }
+	@Autowired
+	public ProcessorService(SimpMessagingTemplate template) {
+		this.template = template;
+	}
 
-    @Async
-    public void execute(Mensagem mensagem) {
-        try {
-            Thread.sleep(2000L);
-            template.convertAndSend("/statusProcessor", gerarMensagem(1) + " Remetente: " + mensagem.getRemetente()+ " Mensagem: "+ mensagem.getMensagem());
-            Thread.sleep(2000L);
-            template.convertAndSend("/statusProcessor", gerarMensagem(2));
-            Thread.sleep(2000L);
-            template.convertAndSend("/statusProcessor", gerarMensagem(3));
-        } catch (InterruptedException e) {
-            log.error("Erro durante o procesamento.", e);
-        }
-    }
+	@Async
+	public void execute(Sala sala) {
+		String URLresposta = "/statusProcessor" + sala.getId().toString();
 
-    private String gerarMensagem(int etapa) {
-        return String.format("Executada a etapa %s às %s", etapa,
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
-    }
+		try {
+
+			template.convertAndSend(URLresposta, gerarMensagem() 
+					+ "\nSala Número: " + sala.getId() 
+					+ " \nUsuário: " + sala.getUsuario() 
+					+ "\nMensagem: " + sala.getMensagem()
+
+			);
+
+		} catch (Exception e) {
+			log.error("Erro durante o procesamento.", e);
+		}
+	}
+
+	private String gerarMensagem() {
+		return String.format("Executada  às %s",
+				LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+	}
+
+//    private String gerarURL(Sala sala) {
+//    	mensagem.setId(1L);
+//    	 String URL = ServletUriComponentsBuilder.fromCurrentContextPath().path("/statusProcessor")
+//    			 .path(mensagem.getId().toString()).toUriString();
+//    	 return URL;
+//    	
+//    }
+
 }

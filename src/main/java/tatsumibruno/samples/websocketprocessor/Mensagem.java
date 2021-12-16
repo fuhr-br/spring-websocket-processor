@@ -3,7 +3,7 @@ package tatsumibruno.samples.websocketprocessor;
 public class Mensagem {
     private String remetente;
     private String mensagem;
-
+    private Long id;
     public Mensagem() {
     }
 
@@ -12,7 +12,17 @@ public class Mensagem {
         this.mensagem = mensagem;
     }
 
-    public String getRemetente() {
+    
+    
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getRemetente() {
         return remetente;
     }
 
